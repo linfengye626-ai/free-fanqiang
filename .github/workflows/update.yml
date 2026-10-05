@@ -17,10 +17,11 @@ jobs:
         run: |
           pip install pyyaml -q
           python3 - <<'PYEOF'
-          import base64, urllib.request
+          import base64, json, urllib.parse, urllib.request
           import yaml
 
-          N = 10
+          # 混合协议配额（只用 TCP 协议，hysteria2 在部分网络下被拦截）
+          QUOTA = {"ss": 3, "trojan": 3, "vless": 2, "vmess": 2}
           CLASH_URLS = [
               "https://cdn.jsdelivr.net/gh/Au1rxx/free-vpn-subscriptions@main/output/clash.yaml",
               "https://raw.githubusercontent.com/Au1rxx/free-vpn-subscriptions/main/output/clash.yaml",
@@ -42,7 +43,33 @@ jobs:
                       pass
               raise RuntimeError("上游订阅下载失败")
 
-          proxies = yaml.safe_load(fetch(CLASH_URLS)).get("proxies", [])[:N]
+          def link_name(link):
+              if link.startswith("vmess://"):
+                  try:
+                      d = json.loads(base64.b64decode(link.split("://", 1)[1] + "===").decode())
+                      return d.get("ps") or ""
+                  except Exception:
+                      return ""
+              return urllib.parse.unquote(link.split("#")[-1]) if "#" in link else ""
+
+          raw = fetch(V2RAY_URLS).decode().strip()
+          links = [l for l in base64.b64decode(raw).decode(errors="ignore").splitlines() if l.strip()]
+          clash_by_name = {p["name"]: p for p in yaml.safe_load(fetch(CLASH_URLS)).get("proxies", [])}
+
+          picked, need = [], dict(QUOTA)
+          for link in links:
+              if all(v == 0 for v in need.values()):
+                  break
+              proto = link.split("://")[0]
+              if proto not in need or need[proto] == 0:
+                  continue
+              name = link_name(link)
+              if name not in clash_by_name:
+                  continue
+              picked.append(link)
+              need[proto] -= 1
+
+          proxies = [clash_by_name[link_name(l)] for l in picked]
           names = [p["name"] for p in proxies]
           clash_cfg = {
               "port": 7890, "socks-port": 7891, "allow-lan": True,
@@ -59,12 +86,10 @@ jobs:
           with open("top10-clash.yaml", "w", encoding="utf-8") as f:
               yaml.safe_dump(clash_cfg, f, allow_unicode=True, sort_keys=False)
 
-          raw = fetch(V2RAY_URLS).decode().strip()
-          links = [l for l in base64.b64decode(raw).decode(errors="ignore").splitlines() if l.strip()][:N]
           with open("top10-v2ray.txt", "w", encoding="utf-8") as f:
-              f.write(base64.b64encode(("\n".join(links)).encode()).decode())
+              f.write(base64.b64encode(("\n".join(picked)).encode()).decode())
 
-          print(f"OK: {len(proxies)} clash / {len(links)} v2ray")
+          print(f"OK: {len(proxies)} clash / {len(picked)} v2ray")
           PYEOF
 
       - name: 提交更新
