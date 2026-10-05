@@ -4,30 +4,30 @@ allow-lan: true
 mode: rule
 log-level: info
 proxies:
-- name: EPODONIOS
-  type: ss
-  server: 198.98.53.130
-  port: 443
-  cipher: chacha20-ietf-poly1305
-  password: eDfN7SODQceIOmIAbtJJtK
 - name: shadowsocks-218
   type: ss
   server: 149.22.87.204
   port: 443
   cipher: aes-128-gcm
   password: shadowsocks
-- name: EPODONIOS-2
+- name: EPODONIOS
   type: ss
   server: 102.37.156.224
   port: 443
   cipher: chacha20-ietf-poly1305
   password: aduB9HGxQHjA2SBMRjkHX6
+- name: EPODONIOS-2
+  type: ss
+  server: 198.98.53.130
+  port: 443
+  cipher: chacha20-ietf-poly1305
+  password: eDfN7SODQceIOmIAbtJJtK
 proxy-groups:
 - name: 🚀 手动选择
   type: select
   proxies: &id001
-  - EPODONIOS
   - shadowsocks-218
+  - EPODONIOS
   - EPODONIOS-2
 - name: ♻️ 自动选择
   type: url-test
