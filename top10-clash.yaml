@@ -1,102 +1,21 @@
-port: 7890
-socks-port: 7891
-allow-lan: true
-mode: rule
-log-level: info
 proxies:
-- name: trojan-1645398608
-  type: trojan
-  server: noted-cougar.rooster465.autos
-  port: 443
-  password: UX82473651
-  sni: noted-cougar.rooster465.autos
-  skip-cert-verify: true
-- name: trojan-1665763441
-  type: trojan
-  server: 54.180.236.195
-  port: 443
-  password: UX82473651
-  sni: evolving-ewe.rooster465.autos
-  skip-cert-verify: true
-- name: trojan-1648313007
-  type: trojan
-  server: balanced-stag.rooster465.autos
-  port: 443
-  password: UX82473651
-  sni: balanced-stag.rooster465.autos
-  skip-cert-verify: true
-- name: trojan-1653446786
-  type: trojan
-  server: main-fawn.rooster465.autos
-  port: 443
-  password: UX82473651
-  sni: main-fawn.rooster465.autos
-  skip-cert-verify: true
-- name: trojan-1643520544
-  type: trojan
-  server: integral-rodent.rooster465.autos
-  port: 443
-  password: UX82473651
-  sni: integral-rodent.rooster465.autos
-  skip-cert-verify: true
-- name: trojan-1666069095
-  type: trojan
-  server: 43.207.89.91
-  port: 443
-  password: UX82473651
-  sni: organic-caribou.rooster465.autos
-  skip-cert-verify: true
-- name: shadowsocks-482887639
+- name: TG-NL-8080
   type: ss
-  server: 82.38.31.164
-  port: 443
+  server: 193.29.139.198
+  port: 8080
   cipher: chacha20-ietf-poly1305
-  password: oZIoA69Q8yhcQV8ka3Pa3A
-- name: vless-1645364938
-  type: vless
-  server: jpga01.jumpernode.site
-  port: 443
-  uuid: 05453546-201f-4e8d-97ae-fd70da0e951f
-  flow: xtls-rprx-vision
-  tls: true
-  servername: amzn.com
-  client-fingerprint: chrome
-  reality-opts:
-    public-key: AgTktefiMM58y7f-KFgEtmVti_YJbd0GPSkxNeJ0RH4
-    short-id: c8e49965
-  network: tcp
-- name: trojan-1645398594
-  type: trojan
-  server: kind-stork.rooster465.autos
-  port: 443
-  password: UX82473651
-  sni: kind-stork.rooster465.autos
-  skip-cert-verify: true
-- name: trojan-1660423729
-  type: trojan
-  server: 54.65.177.190
-  port: 443
-  password: UX82473651
-  sni: winning-marten.rooster465.autos
-  skip-cert-verify: true
+  password: k1dBOmOB4oqi7Ump37a1bQ
+- name: TG-UK-8080
+  type: ss
+  server: 82.38.31.191
+  port: 8080
+  cipher: chacha20-ietf-poly1305
+  password: k1dBOmOB4oqi7Ump37a1bQ
 proxy-groups:
-- name: 🚀 手动选择
+- name: TG-精选
   type: select
-  proxies: &id001
-  - trojan-1645398608
-  - trojan-1665763441
-  - trojan-1648313007
-  - trojan-1653446786
-  - trojan-1643520544
-  - trojan-1666069095
-  - shadowsocks-482887639
-  - vless-1645364938
-  - trojan-1645398594
-  - trojan-1660423729
-- name: ♻️ 自动选择
-  type: url-test
-  url: http://www.gstatic.com/generate_204
-  interval: 300
-  proxies: *id001
+  proxies:
+  - TG-NL-8080
+  - TG-UK-8080
 rules:
-- MATCH,🚀 手动选择
+- MATCH,TG-精选
