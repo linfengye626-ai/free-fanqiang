@@ -1,21 +1,31 @@
+port: 7890
+socks-port: 7891
+allow-lan: true
+mode: rule
+log-level: info
 proxies:
-- name: TG-NL-8080
+- name: EPODONIOS
   type: ss
-  server: 193.29.139.198
-  port: 8080
+  server: 198.98.53.130
+  port: 443
   cipher: chacha20-ietf-poly1305
-  password: k1dBOmOB4oqi7Ump37a1bQ
-- name: TG-UK-8080
+  password: eDfN7SODQceIOmIAbtJJtK
+- name: EPODONIOS-1
   type: ss
-  server: 82.38.31.191
-  port: 8080
+  server: 102.37.156.224
+  port: 443
   cipher: chacha20-ietf-poly1305
-  password: k1dBOmOB4oqi7Ump37a1bQ
+  password: aduB9HGxQHjA2SBMRjkHX6
 proxy-groups:
-- name: TG-精选
+- name: 🚀 手动选择
   type: select
-  proxies:
-  - TG-NL-8080
-  - TG-UK-8080
+  proxies: &id001
+  - EPODONIOS
+  - EPODONIOS-1
+- name: ♻️ 自动选择
+  type: url-test
+  url: http://www.gstatic.com/generate_204
+  interval: 300
+  proxies: *id001
 rules:
-- MATCH,TG-精选
+- MATCH,🚀 手动选择
