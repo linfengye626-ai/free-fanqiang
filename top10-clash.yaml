@@ -1,0 +1,97 @@
+port: 7890
+socks-port: 7891
+allow-lan: true
+mode: rule
+log-level: info
+proxies:
+- name: hysteria2-1111846126
+  password: 3d7634af8cb2c6cb4bac1c0efad8b43d
+  port: 50160
+  server: 152.67.200.82
+  skip-cert-verify: true
+  sni: whatsapp.com
+  type: hysteria2
+- name: hysteria2-1503208276
+  password: my_super_password_123
+  port: 443
+  server: open.w2m.ink
+  skip-cert-verify: true
+  sni: ''
+  type: hysteria2
+- name: hysteria2-1420323645
+  password: H7mP2xY9kJ4nQ8wR5tF6vB3z
+  port: 443
+  server: 202.146.222.29
+  skip-cert-verify: true
+  sni: https%3a%2f%2ft.me%2fwangcai2%d1%80%d2%b9%d2%af%d1%80%d2%b9%d2%af
+  type: hysteria2
+- name: hysteria2-1276640913
+  password: H7mP2xY9kJ4nQ8wR5tF6vB3z
+  port: 443
+  server: 202.146.222.29
+  skip-cert-verify: true
+  sni: https://t.me/wangcai2рҹүрҹү
+  type: hysteria2
+- name: hysteria2-1589277560
+  password: H7mP2xY9kJ4nQ8wR5tF6vB3z
+  port: 443
+  server: 202.146.222.29
+  skip-cert-verify: true
+  sni: https://t.me/wangcai2ⁿß«ⁿß
+  type: hysteria2
+- name: hysteria2-1162353391
+  password: 3d7634af8cb2c6cb4bac1c0efad8b43d
+  port: 50160
+  server: 152.67.200.82
+  skip-cert-verify: true
+  sni: ''
+  type: hysteria2
+- name: hysteria2-864234258
+  password: H7mP2xY9kJ4nQ8wR5tF6vB3z
+  port: 443
+  server: 202.146.222.89
+  skip-cert-verify: true
+  sni: https%253a%252f%252ft.me%252fclashv8%25f0%259f%2587%25a8%25f0%259f%2587%25b3
+  type: hysteria2
+- name: hysteria2-920243845
+  password: H7mP2xY9kJ4nQ8wR5tF6vB3z
+  port: 443
+  server: 202.146.222.174
+  skip-cert-verify: true
+  sni: https://t.me/wangcai2
+  type: hysteria2
+- name: hysteria2-1474773098
+  password: my_super_password_123
+  port: 443
+  server: open.w2m.ink
+  skip-cert-verify: false
+  sni: ''
+  type: hysteria2
+- name: hysteria2-1111846211
+  password: 3d7634af8cb2c6cb4bac1c0efad8b43d
+  port: 50160
+  server: 152.67.200.82
+  skip-cert-verify: true
+  sni: t.me
+  type: hysteria2
+proxy-groups:
+- name: 🚀 手动选择
+  type: select
+  proxies: &id001
+  - hysteria2-1111846126
+  - hysteria2-1503208276
+  - hysteria2-1420323645
+  - hysteria2-1276640913
+  - hysteria2-1589277560
+  - hysteria2-1162353391
+  - hysteria2-864234258
+  - hysteria2-920243845
+  - hysteria2-1474773098
+  - hysteria2-1111846211
+- name: ♻️ 自动选择
+  type: url-test
+  url: http://www.gstatic.com/generate_204
+  interval: 300
+  proxies: *id001
+rules:
+- MATCH,🚀 手动选择
