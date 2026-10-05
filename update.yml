@@ -1,0 +1,76 @@
+name: 每日 Top10 节点更新
+
+on:
+  schedule:
+    - cron: '0 1 * * *'  # 每天北京时间 09:00 自动运行
+  workflow_dispatch:      # 也可以在 Actions 页面手动点运行
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 生成 Top10 节点文件
+        run: |
+          pip install pyyaml -q
+          python3 - <<'PYEOF'
+          import base64, urllib.request
+          import yaml
+
+          N = 10
+          CLASH_URLS = [
+              "https://cdn.jsdelivr.net/gh/Au1rxx/free-vpn-subscriptions@main/output/clash.yaml",
+              "https://raw.githubusercontent.com/Au1rxx/free-vpn-subscriptions/main/output/clash.yaml",
+          ]
+          V2RAY_URLS = [
+              "https://cdn.jsdelivr.net/gh/Au1rxx/free-vpn-subscriptions@main/output/v2ray-base64.txt",
+              "https://raw.githubusercontent.com/Au1rxx/free-vpn-subscriptions/main/output/v2ray-base64.txt",
+          ]
+
+          def fetch(urls):
+              for u in urls:
+                  try:
+                      req = urllib.request.Request(u, headers={"User-Agent": "Mozilla/5.0"})
+                      with urllib.request.urlopen(req, timeout=40) as r:
+                          data = r.read()
+                          if r.status == 200 and len(data) > 1000:
+                              return data
+                  except Exception:
+                      pass
+              raise RuntimeError("上游订阅下载失败")
+
+          proxies = yaml.safe_load(fetch(CLASH_URLS)).get("proxies", [])[:N]
+          names = [p["name"] for p in proxies]
+          clash_cfg = {
+              "port": 7890, "socks-port": 7891, "allow-lan": True,
+              "mode": "rule", "log-level": "info",
+              "proxies": proxies,
+              "proxy-groups": [
+                  {"name": "🚀 手动选择", "type": "select", "proxies": names},
+                  {"name": "♻️ 自动选择", "type": "url-test",
+                   "url": "http://www.gstatic.com/generate_204",
+                   "interval": 300, "proxies": names},
+              ],
+              "rules": ["MATCH,🚀 手动选择"],
+          }
+          with open("top10-clash.yaml", "w", encoding="utf-8") as f:
+              yaml.safe_dump(clash_cfg, f, allow_unicode=True, sort_keys=False)
+
+          raw = fetch(V2RAY_URLS).decode().strip()
+          links = [l for l in base64.b64decode(raw).decode(errors="ignore").splitlines() if l.strip()][:N]
+          with open("top10-v2ray.txt", "w", encoding="utf-8") as f:
+              f.write(base64.b64encode(("\n".join(links)).encode()).decode())
+
+          print(f"OK: {len(proxies)} clash / {len(links)} v2ray")
+          PYEOF
+
+      - name: 提交更新
+        run: |
+          git config user.name "node-bot"
+          git config user.email "node-bot@localhost"
+          git add top10-clash.yaml top10-v2ray.txt
+          git commit -m "每日 Top10 更新" || echo "无变化"
+          git push
