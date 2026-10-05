@@ -52,11 +52,35 @@ jobs:
                       return ""
               return urllib.parse.unquote(link.split("#")[-1]) if "#" in link else ""
 
+          # 上游 clash.yaml 里偶尔有坏数据（如 network: raw / network: tcp#...），
+          # 直接透传会导致客户端解析失败。这里只允许合法的传输类型。
+          CLASH_NETWORKS = {"tcp", "http", "h2", "ws", "grpc"}
+
+          def valid_proxy(p):
+              if not p.get("server") or not p.get("port"):
+                  return False
+              t = p.get("type")
+              if t in ("vmess", "vless"):
+                  if not p.get("uuid"):
+                      return False
+                  net = p.get("network")
+                  if net is not None and net not in CLASH_NETWORKS:
+                      return False
+              elif t == "ss":
+                  if not p.get("cipher") or not p.get("password"):
+                      return False
+              elif t == "trojan":
+                  if not p.get("password"):
+                      return False
+              else:
+                  return False
+              return True
+
           raw = fetch(V2RAY_URLS).decode().strip()
           links = [l for l in base64.b64decode(raw).decode(errors="ignore").splitlines() if l.strip()]
           clash_by_name = {p["name"]: p for p in yaml.safe_load(fetch(CLASH_URLS)).get("proxies", [])}
 
-          picked, need = [], dict(QUOTA)
+          picked, need, skipped = [], dict(QUOTA), 0
           for link in links:
               if all(v == 0 for v in need.values()):
                   break
@@ -66,6 +90,9 @@ jobs:
               name = link_name(link)
               if name not in clash_by_name:
                   continue
+              if not valid_proxy(clash_by_name[name]):
+                  skipped += 1
+                  continue  # 坏数据跳过，不占用配额，继续往后找
               picked.append(link)
               need[proto] -= 1
 
@@ -89,7 +116,7 @@ jobs:
           with open("top10-v2ray.txt", "w", encoding="utf-8") as f:
               f.write(base64.b64encode(("\n".join(picked)).encode()).decode())
 
-          print(f"OK: {len(proxies)} clash / {len(picked)} v2ray")
+          print(f"OK: {len(proxies)} clash / {len(picked)} v2ray（跳过坏数据 {skipped} 个）")
           PYEOF
 
       - name: 提交更新
