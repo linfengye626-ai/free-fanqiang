@@ -12,76 +12,83 @@ proxies:
   type: ss
   udp: true
 - cipher: aes-128-gcm
-  name: shadowsocks-218
-  password: shadowsocks
-  port: 443
-  server: 149.22.87.204
-  type: ss
-  udp: true
-- cipher: aes-128-gcm
   name: shadowsocks-211
   password: shadowsocks
   port: 443
   server: 149.22.87.241
   type: ss
   udp: true
-- name: trojan-1645398598
+- cipher: rc4-md5
+  name: shadowsocks-125384
+  password: 14fFPrbezE3HDZzsMOr6
+  port: 8080
+  server: 128.199.172.224
+  type: ss
+  udp: true
+- name: trojan-1687384967
   password: UX82473651
   port: 443
-  server: winning-marten.rooster465.autos
+  server: 13.230.91.226
   skip-cert-verify: true
-  sni: winning-marten.rooster465.autos
+  sni: musical-terrier.rooster465.autos
   type: trojan
   udp: true
-- name: trojan-1655392860
+- name: trojan-1666069095
   password: UX82473651
   port: 443
-  server: evolving-platypus.rooster465.autos
-  skip-cert-verify: false
-  sni: evolving-platypus.rooster465.autos
+  server: 43.207.89.91
+  skip-cert-verify: true
+  sni: organic-caribou.rooster465.autos
   type: trojan
   udp: true
-- name: trojan-1647915026
-  password: UX82473651
-  port: 443
-  server: winning-marten.rooster465.autos
-  skip-cert-verify: false
-  sni: winning-marten.rooster465.autos
+- name: trojan-1683332153
+  password: e26a229d-e8f2-4ff9-8c7d-58a9d83ee437
+  port: 8886
+  server: 45.32.52.173
+  skip-cert-verify: true
+  sni: 45.32.52.173
   type: trojan
   udp: true
-- client-fingerprint: firefox
+- client-fingerprint: chrome
   flow: xtls-rprx-vision
-  name: vless-1013983970
+  name: vless-1645364938
   network: tcp
-  port: 28573
+  port: 443
   reality-opts:
-    public-key: 1DJr9toke7FRuSXjibBVuNvRnLnJnN5kXwUBG6Romzg
-    short-id: 03653bc03be10c97
-  server: 18.183.215.124
-  servername: www.sony.com
+    public-key: AgTktefiMM58y7f-KFgEtmVti_YJbd0GPSkxNeJ0RH4
+    short-id: c8e49965
+  server: jpga01.jumpernode.site
+  servername: amzn.com
   tls: true
   type: vless
   udp: true
-  uuid: 871bfce7-8440-4394-8d82-56b51f20fdad
-- name: vless-663902649
+  uuid: 05453546-201f-4e8d-97ae-fd70da0e951f
+- client-fingerprint: chrome
+  flow: xtls-rprx-vision
+  name: vless-950750905
   network: tcp
-  port: 443
-  server: 137.220.221.179
+  port: 50159
+  reality-opts:
+    public-key: j4QXngGuJkUGwRj4XIrfHRohYYuEfnJlX4cvCE-WklA
+    short-id: 091e1c5db8451757
+  server: 154.31.114.248
+  servername: www.cloudflare.com
+  tls: true
   type: vless
   udp: true
-  uuid: a16a3336-c9ab-489f-9b85-c973f5e2cfa4
+  uuid: d56624b2-35bb-468c-9b2a-e0b0df7230c1
 - alterId: 0
   cipher: auto
-  name: vmess-96606
+  name: vmess-1078158516
   network: tcp
   port: 18000
-  server: 149.88.23.202
+  server: 149.88.23.207
   type: vmess
   udp: true
   uuid: f8c8dc3d-0d37-46b0-8b34-a7232882fcfe
 - alterId: 0
   cipher: auto
-  name: vmess-1474560222
+  name: vmess-685048486
   network: tcp
   port: 18000
   server: 149.88.23.207
@@ -93,15 +100,15 @@ proxy-groups:
   type: select
   proxies: &id001
   - shadowsocks-213
-  - shadowsocks-218
   - shadowsocks-211
-  - trojan-1645398598
-  - trojan-1655392860
-  - trojan-1647915026
-  - vless-1013983970
-  - vless-663902649
-  - vmess-96606
-  - vmess-1474560222
+  - shadowsocks-125384
+  - trojan-1687384967
+  - trojan-1666069095
+  - trojan-1683332153
+  - vless-1645364938
+  - vless-950750905
+  - vmess-1078158516
+  - vmess-685048486
 - name: ♻️ 自动选择
   type: url-test
   url: http://www.gstatic.com/generate_204
